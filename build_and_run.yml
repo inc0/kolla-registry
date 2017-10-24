@@ -1,0 +1,20 @@
+---
+- hosts: control[0]
+  become: true
+  tasks:
+    - file:
+        path: ~/registry
+        state: directory
+
+    - name: Create dockerfile
+      template:
+        src: Dockerfile.j2
+        dest: ~/registry/Dockerfile
+
+    - name: Build image
+      docker_image:
+        name: kolla-registry
+        path: ~/registry
+
+    - name: Run registry
+      command: "docker run -d -p 4000:5000 --name kolla-registry kolla-registry:latest"

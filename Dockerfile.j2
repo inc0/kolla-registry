@@ -1,0 +1,14 @@
+FROM registry:2
+
+ARG base=ubuntu
+ARG type=source
+ARG branch=master
+
+ENV REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/kolla-registry
+
+RUN filename=$base-$type-registry-$branch.tar.gz && \
+    wget -q -c -O "/$filename" "http://tarballs.openstack.org/kolla/images/$filename" && \
+    mkdir /kolla-registry && \
+    tar xzf "/$filename" -C /kolla-registry && \
+    mv /kolla-registry/docker/registry/v2/repositories/lokolla /kolla-registry/docker/registry/v2/repositories/kolla
+
